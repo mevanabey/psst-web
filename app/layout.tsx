@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen`}
       >
         <div className="relative h-screen w-screen overflow-hidden">
-          <header className="fixed top-0 relative z-10 flex justify-center items-center p-6">
+          <header className="fixed top-0 w-full h-fit relative z-50 flex justify-center items-center p-6">
             <Link href="/">
               <Logo className="w-24 text-white" />
             </Link>

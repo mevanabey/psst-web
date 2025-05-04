@@ -120,3 +120,64 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Calendar custom styling for dark mode */
+.rdp-button:hover:not([disabled]) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.rdp-day_selected, 
+.rdp-day_selected:focus-visible, 
+.rdp-day_selected:hover {
+  background-color: white !important;
+  color: black !important;
+}
+
+.rdp-caption_label {
+  color: white;
+  font-weight: 500;
+}
+
+.rdp-head_cell {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.rdp-day {
+  color: white;
+}
+
+.rdp-day_disabled {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.rdp-nav_button {
+  color: white;
+}
+
+.bg-zinc-900 .rdp-months {
+  background-color: rgb(24, 24, 27);
+}
+
+.rdp-caption {
+  padding-top: 0.5rem;
+}
+
+.rdp-footer {
+  padding-top: 0.5rem;
+  padding-bottom: 0.25rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 0.5rem;
+}
+
+/* Form error animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}

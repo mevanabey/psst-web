@@ -3,7 +3,6 @@
 import Link from "next/link";
 import ParticlesBackground from "@/components/background";
 import { motion } from "motion/react"
-import ScrambleHover from "@/components/fancy-hover"
 
 export default function Home() {
   return (
@@ -11,50 +10,58 @@ export default function Home() {
         <main className="relative z-[20] flex flex-col items-center">
           <div className="fixed bottom-8 right-8 sm:bottom-16 sm:right-16 flex flex-col text-right gap-4 text-gray-300">
           <div className="flex flex-col gap-4 mb-2">
-            <motion.div
-              layout
-              animate={{ opacity: [0, 1, 1], y: [10, 10, 0] }}
-              transition={{
-                duration: 0.1,
-                ease: "circInOut",
-                delay: 0,
-                times: [0, 0.2, 1],
-              }}
-            >
-              <Link href="/order" className="uppercase text-md sm:text-2xl relative group">
-                <ScrambleHover
-                  text="Place an Order"
-                  scrambleSpeed={50}
-                  maxIterations={8}
-                  useOriginalCharsOnly={true}
-                  className="cursor-pointer font-medium tracking-wide relative"
-                  scrambledClassName="text-gray-400"
-                  glowColor="rgba(255, 255, 255, 0.9)"
-                />
+              <Link href="/order" className="uppercase text-md sm:text-2xl relative group flex items-center justify-end -mr-2">
+                <motion.span 
+                  className="relative -mt-0.5 mr-3 text-gray-200 opacity-90 font-bold"
+                  initial={{ opacity: 0.6, x: 6 }}
+                  whileHover={{ opacity: 1, x: 0 }}
+                  whileTap={{ scale: 0.95, x: 2 }}
+                >
+                  [
+                </motion.span>
+                <motion.span
+                  className="text-gray-100 cursor-pointer font-medium tracking-wide relative"
+                  initial={{ scale: 1 }}
+                  whileHover={{ scale: 0.97 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Place an Order
+                </motion.span>
+                <motion.span 
+                  className="relative -mt-0.5 ml-3 text-gray-100 opacity-90 font-bold"
+                  initial={{ opacity: 0.6, x: -6 }}
+                  whileHover={{ opacity: 1, x: 0 }}
+                  whileTap={{ scale: 0.95, x: -2 }}
+                >
+                  ]
+                </motion.span>
               </Link>
-            </motion.div>
-            <motion.div
-              layout
-              animate={{ opacity: [0, 1, 1], y: [10, 10, 0] }}
-              transition={{
-                duration: 0.1,
-                ease: "circInOut",
-                delay: 1 * 0.05 + 0.5,
-                times: [0, 0.2, 1],
-              }}
-            >
-              <Link href="/order" className="uppercase text-md sm:text-2xl relative group">
-                <ScrambleHover
-                  text="Contact Us"
-                  scrambleSpeed={50}
-                  maxIterations={8}
-                  useOriginalCharsOnly={true}
-                  className="cursor-pointer font-medium tracking-wide relative"
-                  scrambledClassName="text-gray-400"
-                  glowColor="rgba(255, 255, 255, 0.9)"
-                />
+              <Link href="/contact" className="uppercase text-md sm:text-2xl relative group flex items-center justify-end -mr-2">
+                <motion.span 
+                  className="relative -mt-0.5 mr-3 text-gray-100 opacity-90 font-bold"
+                  initial={{ opacity: 0.6, x: 6 }}
+                  whileHover={{ opacity: 1, x: 0 }}
+                  whileTap={{ scale: 0.95, x: 2 }}
+                >
+                  [
+                </motion.span>
+                <motion.span
+                  className="text-gray-100 cursor-pointer font-medium tracking-wide relative"
+                  initial={{ scale: 1 }}
+                  whileHover={{ scale: 0.97 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Contact Us
+                </motion.span>
+                <motion.span 
+                  className="relative -mt-0.5 ml-3 text-gray-100 opacity-90 font-bold"
+                  initial={{ opacity: 0.6, x: -6 }}
+                  whileHover={{ opacity: 1, x: 0 }}
+                  whileTap={{ scale: 0.95, x: -2 }}
+                >
+                  ]
+                </motion.span>
               </Link>
-            </motion.div>
           </div>
           <div className="flex justify-end gap-6 mt-2">
             <a href="https://wa.me/61448635272?text=Hello,%20I%20have%20an%20inquiry%20for%20PSST%20Vodka%20" target="_blank" rel="noreferrer">
