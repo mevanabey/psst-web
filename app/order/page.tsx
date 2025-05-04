@@ -7,7 +7,6 @@ import { supabase } from "@/lib/supabase";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import Link from "next/link";
-// import { useRouter } from "next/navigation";
 
 // Add validation types
 interface ValidationErrors {
@@ -363,17 +362,16 @@ export default function OrderPage() {
   // If we have a successful submission, show a success screen
   if (submitStatus?.type === 'success') {
     return (
-      <div className="relative h-full w-full z-[100] mt-32 md:mt-32 px-6 max-w-xl mx-auto">
-        <Link href="/" className="fixed top-24 left-6 z-[100] text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
+      <div className="relative h-full w-full flex flex-col justify-center items-center z-[100] px-6 max-w-xl mx-auto">
+        <Link href="/" className="fixed top-4 left-3 z-[100] text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
           <motion.div
-            className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-3 py-2 rounded-full"
+            className="flex items-center gap-2 px-3 py-2 rounded-full"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-            <span>Back</span>
-          </motion.div>
-        </Link>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        </motion.div>
+      </Link>
         <motion.div 
           className="w-full text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -384,50 +382,23 @@ export default function OrderPage() {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6">
               <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-light mb-4">Order Submitted</h2>
-            <p className="text-lg text-zinc-400 mb-6">
+            <h2 className="text-2xl sm:text-4xl font-medium mb-4">Order Submitted</h2>
+            <p className="text-md text-zinc-400 mb-6">
               Thank you for your order. We&apos;ll be in touch soon to confirm the details.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <Link href="/">
                 <motion.button
-                  className="px-8 py-3 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors"
+                  className="text-sm sm:text-base px-8 py-3 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   Back to Home
                 </motion.button>
               </Link>
-              <motion.button
-                onClick={() => {
-                  // Reset form
-                  setFormData({
-                    companyName: "",
-                    contactName: "",
-                    email: "",
-                    phone: "",
-                    quantity: 1,
-                    deliveryDate: "",
-                    notes: "",
-                    address: "",
-                  });
-                  setSubmitStatus(null);
-                  setTouched({});
-                  setErrors({});
-                }}
-                className="px-8 py-3 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Place Another Order
-              </motion.button>
             </div>
           </div>
         </motion.div>
-        <footer className="py-6 text-center text-sm text-zinc-600 mt-20">
-          <div className="pb-6 border-t border-zinc-900"></div>
-          <p>&copy; {new Date().getFullYear()} PSST Vodka</p>
-        </footer>
       </div>
     );
   }
@@ -441,7 +412,6 @@ export default function OrderPage() {
           whileTap={{ scale: 0.95 }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          {/* <span>Back</span> */}
         </motion.div>
       </Link>
       <div className="max-w-xl mx-auto">
@@ -450,7 +420,7 @@ export default function OrderPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-10 mt-20"
       >
-        <h1 className="text-2xl sm:text-4xl font-bold text-center mb-1">Place an Order</h1>
+        <h1 className="text-2xl sm:text-4xl font-bold text-center mb-1 tracking-tight">Place an Order</h1>
         <p className="text-sm sm:text-base text-zinc-400 text-center">Fill out the form below to place your order</p>
       </motion.div>
       
@@ -641,7 +611,7 @@ export default function OrderPage() {
           <motion.button
             type="submit"
             disabled={isSubmitting}
-            className="w-full px-8 py-3 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors relative"
+            className="w-full px-8 py-3 text-sm sm:text-base rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors relative"
             whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
             whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
           >
@@ -662,10 +632,6 @@ export default function OrderPage() {
         </motion.div>
       </form>
       </div>
-      {/* <footer className="py-6 text-center text-sm text-zinc-600 mt-20">
-        <div className="pb-6 border-t border-zinc-900"></div>
-        <p>&copy; {new Date().getFullYear()} PSST Vodka</p>
-      </footer> */}
     </div>
   );
 } 

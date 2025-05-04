@@ -20,10 +20,10 @@ export default function Home() {
                   [
                 </motion.span>
                 <motion.span
-                  className="text-gray-100 cursor-pointer font-medium tracking-wide relative"
+                  className="text-gray-100 hover:text-white cursor-pointer font-medium tracking-wide relative"
                   initial={{ scale: 1 }}
                   whileHover={{ scale: 0.9 }}
-                  whileTap={{ scale: 0.9 }}
+                  whileTap={{ scale: 0.8 }}
                 >
                   Place an Order
                 </motion.span>
@@ -46,10 +46,10 @@ export default function Home() {
                   [
                 </motion.span>
                 <motion.span
-                  className="text-gray-100 cursor-pointer font-medium tracking-wide relative"
+                  className="text-gray-100 hover:text-white cursor-pointer font-medium tracking-wide relative"
                   initial={{ scale: 1 }}
                   whileHover={{ scale: 0.9 }}
-                  whileTap={{ scale: 0.9 }}
+                  whileTap={{ scale: 0.8 }}
                 >
                   Contact Us
                 </motion.span>
