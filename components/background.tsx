@@ -236,9 +236,9 @@ export default function ParticlesBackground({
         >
             <canvas
                 ref={canvasRef}
-                className="absolute inset-0 w-full h-full opacity-30"
+                className="absolute inset-0 w-full h-full opacity-30 overflow-hidden"
             />
-            <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
+            <div className="relative z-10 flex flex-col items-center justify-center w-full h-full overflow-hidden">
                 {/* <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
