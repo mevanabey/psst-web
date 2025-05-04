@@ -85,7 +85,7 @@ export default function Home() {
           {/* <Image src="/bg-img-2.png" alt="Logo" width={325} height={75} className="rotate-90 sm:rotate-90 -bottom-20 sm:bottom-0 m-0 left-10 sm:left-20 opacity-80" /> */}
         </main>
         
-        <ParticlesBackground className="absolute inset-0 w-full h-full z-0" />
+        <ParticlesBackground className="absolute inset-0 w-full h-full z-0 overflow-hidden" />
       </div>
   );
 }
