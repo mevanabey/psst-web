@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // Add validation types
 interface ValidationErrors {
@@ -168,6 +169,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({ value, onChange }) =>
 };
 
 export default function OrderPage() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -182,6 +184,16 @@ export default function OrderPage() {
     notes: "",
     address: "",
   });
+
+  // Force a refresh on initial load to ensure layout consistency
+  useEffect(() => {
+    // This helps ensure the layout is consistently applied
+    const timer = setTimeout(() => {
+      document.body.style.opacity = "1";
+    }, 50);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Validate a field
   const validateField = (fieldId: string, value: string | number): string => {
@@ -351,8 +363,8 @@ export default function OrderPage() {
   // If we have a successful submission, show a success screen
   if (submitStatus?.type === 'success') {
     return (
-      <div className="mt-24 md:mt-32 px-6 max-w-xl mx-auto">
-        <Link href="/" className="fixed top-6 left-6 z-50 text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
+      <div className="relative h-full w-full z-[100] mt-32 md:mt-32 px-6 max-w-xl mx-auto">
+        <Link href="/" className="fixed top-24 left-6 z-[100] text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
           <motion.div
             className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-3 py-2 rounded-full"
             whileHover={{ scale: 1.05 }}
@@ -421,21 +433,22 @@ export default function OrderPage() {
   }
 
   return (
-    <div className="h-full w-full overflow-y-auto mt-4 md:mt-32 px-6 max-w-xl mx-auto">
-      <Link href="/" className="fixed top-6 left-6 z-50 text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
+    <div className="h-full w-full overflow-y-auto mt-4 md:mt-32 px-6">
+      <Link href="/" className="fixed top-4 left-3 z-[100] text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
         <motion.div
-          className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-3 py-2 rounded-full"
+          className="flex items-center gap-2 px-3 py-2 rounded-full"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          <span>Back</span>
+          {/* <span>Back</span> */}
         </motion.div>
       </Link>
+      <div className="max-w-xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-10"
+        className="mb-10 mt-20"
       >
         <h1 className="text-2xl sm:text-4xl font-bold text-center mb-1">Place an Order</h1>
         <p className="text-sm sm:text-base text-zinc-400 text-center">Fill out the form below to place your order</p>
@@ -648,11 +661,11 @@ export default function OrderPage() {
           </motion.button>
         </motion.div>
       </form>
-      
-      <footer className="py-6 text-center text-sm text-zinc-600 mt-20">
+      </div>
+      {/* <footer className="py-6 text-center text-sm text-zinc-600 mt-20">
         <div className="pb-6 border-t border-zinc-900"></div>
         <p>&copy; {new Date().getFullYear()} PSST Vodka</p>
-      </footer>
+      </footer> */}
     </div>
   );
 } 

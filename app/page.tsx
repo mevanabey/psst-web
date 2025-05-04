@@ -10,9 +10,9 @@ export default function Home() {
         <main className="relative z-[20] flex flex-col items-center">
           <div className="fixed bottom-8 right-8 sm:bottom-16 sm:right-16 flex flex-col text-right gap-4 text-gray-300">
           <div className="flex flex-col gap-4 mb-2">
-              <Link href="/order" className="uppercase text-md sm:text-2xl relative group flex items-center justify-end -mr-2">
+              <Link href="/order" className="uppercase text-md sm:text-2xl relative group flex items-center justify-end -mr-2" scroll={true} prefetch={true}>
                 <motion.span 
-                  className="relative -mt-0.5 mr-3 text-gray-200 opacity-90 font-bold"
+                  className="relative -mt-0.5 mr-3  font-bold"
                   initial={{ opacity: 0.6, x: 6 }}
                   whileHover={{ opacity: 1, x: 0 }}
                   whileTap={{ scale: 0.95, x: 2 }}
@@ -20,7 +20,7 @@ export default function Home() {
                   [
                 </motion.span>
                 <motion.span
-                  className="text-gray-100 cursor-pointer font-medium tracking-wide relative"
+                  className="text-gray-300 cursor-pointer font-medium tracking-wide relative"
                   initial={{ scale: 1 }}
                   whileHover={{ scale: 0.97 }}
                   whileTap={{ scale: 0.95 }}
@@ -28,7 +28,7 @@ export default function Home() {
                   Place an Order
                 </motion.span>
                 <motion.span 
-                  className="relative -mt-0.5 ml-3 text-gray-100 opacity-90 font-bold"
+                  className="relative -mt-0.5 ml-3 text-gray-100 font-bold"
                   initial={{ opacity: 0.6, x: -6 }}
                   whileHover={{ opacity: 1, x: 0 }}
                   whileTap={{ scale: 0.95, x: -2 }}
@@ -36,9 +36,9 @@ export default function Home() {
                   ]
                 </motion.span>
               </Link>
-              <Link href="/contact" className="uppercase text-md sm:text-2xl relative group flex items-center justify-end -mr-2">
+              <Link href="/contact" className="uppercase text-md sm:text-2xl relative group flex items-center justify-end -mr-2" scroll={true} prefetch={true}>
                 <motion.span 
-                  className="relative -mt-0.5 mr-3 text-gray-100 opacity-90 font-bold"
+                  className="relative -mt-0.5 mr-3 text-gray-100 font-bold"
                   initial={{ opacity: 0.6, x: 6 }}
                   whileHover={{ opacity: 1, x: 0 }}
                   whileTap={{ scale: 0.95, x: 2 }}
@@ -54,7 +54,7 @@ export default function Home() {
                   Contact Us
                 </motion.span>
                 <motion.span 
-                  className="relative -mt-0.5 ml-3 text-gray-100 opacity-90 font-bold"
+                  className="relative -mt-0.5 ml-3 text-gray-100 font-bold"
                   initial={{ opacity: 0.6, x: -6 }}
                   whileHover={{ opacity: 1, x: 0 }}
                   whileTap={{ scale: 0.95, x: -2 }}
