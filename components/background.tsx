@@ -251,7 +251,7 @@ export default function ParticlesBackground({
                     <p className="text-xl md:text-2xl font-light bg-clip-text text-transparent bg-gradient-to-b from-black/90 to-black/50 dark:from-white/90 dark:to-white/50">
                         {subtitle}
                     </p> */}
-                    {/* <Image src="/bg-img-2.png" alt="Logo" width={150} height={650} className="fixed rotate-40 sm:rotate-90 -bottom-20 sm:bottom-0 mx-auto left-10 sm:left-20 opacity-80" /> */}
+                    <Image src="/bg-img-2.png" alt="Logo" width={150} height={650} className="fixed rotate-40 sm:rotate-90 -bottom-20 sm:bottom-0 mx-auto left-10 sm:left-20 opacity-80" /> 
                 {/* </motion.div> */}
             </div>
         </div>

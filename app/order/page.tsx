@@ -1,6 +1,5 @@
 "use client"
 
-import { Logo } from "@/components/logos";
 import { useState } from "react";
 
 export default function OrderPage() {
@@ -105,7 +104,7 @@ export default function OrderPage() {
       id: "notes",
       label: "Any special instructions?",
       type: "textarea",
-      placeholder: "Enter special instructions (optional)"
+      placeholder: "Any special instructions (optional)"
     },
     {
       id: "address",
@@ -120,11 +119,6 @@ export default function OrderPage() {
 
   return (
     <div className="h-screen w-screen overflow-hidden flex flex-col bg-black text-white">
-      {/* Header with logo */}
-      <header className="p-6 fixed top-0 left-0 z-10">
-        <Logo className="w-20 text-white" />
-      </header>
-
       {/* Main ordering section */}
       <main className="flex-1 flex items-center justify-center">
         <form onSubmit={handleSubmit} className="w-full max-w-xl px-8">
