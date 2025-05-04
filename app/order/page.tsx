@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { Calendar } from "@/components/ui/calendar";
@@ -23,6 +23,29 @@ interface FormDataType {
   notes: string;
   address: string;
   [key: string]: string | number;
+}
+
+// Step interfaces
+interface BaseStepProps {
+  formData: FormDataType;
+  errors: ValidationErrors;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+  handleBlur: (fieldId: string) => void;
+  goToNextStep: () => void;
+  goToPrevStep: () => void;
+}
+
+interface CompanyInfoStepProps extends BaseStepProps {}
+interface ContactInfoStepProps extends BaseStepProps {}
+interface OrderDetailsStepProps extends BaseStepProps {
+  handleQuantityChange: (value: number | string) => void;
+  handleDateChange: (value: string) => void;
+}
+interface DeliveryInfoStepProps extends BaseStepProps {}
+interface ReviewStepProps extends BaseStepProps {
+  isSubmitting: boolean;
+  submitStatus: { type: 'success' | 'error', message: string } | null;
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
 }
 
 interface QuantityStepperProps {
@@ -98,7 +121,6 @@ const QuantityStepper: React.FC<QuantityStepperProps> = ({ value, onChange, min 
 // Custom Date Picker Component
 const DatePickerField: React.FC<DatePickerFieldProps> = ({ value, onChange }) => {
   const [date, setDate] = useState<Date | undefined>(value ? new Date(value) : undefined);
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   // Create a date for the day after tomorrow
   const today = new Date();
@@ -110,65 +132,501 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({ value, onChange }) =>
 
   const handleSelect = (date: Date | undefined) => {
     setDate(date);
-    setIsCalendarOpen(false);
     if (date) {
       onChange(format(date, 'yyyy-MM-dd'));
     }
   };
 
   return (
-    <div className="relative w-full">
-      <motion.button
-        type="button"
-        onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-        className="w-full py-2 px-4 bg-transparent border-b-2 border-white/20 hover:border-white/50 focus:border-white text-left text-base focus:outline-none transition-colors flex items-center justify-between"
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
-      >
-        <span>{date ? format(date, 'MMMM d, yyyy') : "Select a delivery date"}</span>
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
-          className={`transition-transform duration-200 ${isCalendarOpen ? 'rotate-180' : ''}`}
-        >
-          <path d="m6 9 6 6 6-6"/>
-        </svg>
-      </motion.button>
-
-      {isCalendarOpen && (
-        <motion.div 
-          className="absolute top-full left-0 mt-2 z-50 bg-zinc-900 border border-white/10 rounded-lg shadow-xl p-3"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-        >
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={handleSelect}
-            disabled={(date) => date < dayAfterTomorrow}
-            className="text-white bg-zinc-900"
-            footer={
-              <div className="mt-2 text-xs text-center text-gray-400">
-                Orders must be placed at least 2 days in advance
-              </div>
-            }
-          />
-        </motion.div>
+    <div className="w-full">
+      {date && (
+        <div className="w-full py-2 px-0 bg-transparent border-b-2 border-white/20 mb-4 flex items-center justify-between">
+          <span className="text-base">{date ? format(date, 'MMMM d, yyyy') : "Select a delivery date"}</span>
+          
+          {date && (
+            <motion.button
+              type="button"
+              onClick={() => setDate(undefined)}
+              className="text-white/50 hover:text-white"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </motion.button>
+          )}
+        </div>
       )}
+
+      <div className="w-full">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={handleSelect}
+          disabled={(date) => date < dayAfterTomorrow}
+          className="text-white bg-transparent border border-white/10 rounded-lg shadow-lg p-0"
+          classNames={{
+            months: "space-y-4",
+            month: "space-y-4",
+            caption: "flex justify-center pt-4 relative items-center",
+            caption_label: "text-base font-medium text-white",
+            nav: "flex items-center gap-1",
+            nav_button: "h-8 w-8 bg-transparent p-0 opacity-70 hover:opacity-100 rounded-full flex items-center justify-center border border-white/20 hover:border-white/60 transition-colors",
+            nav_button_previous: "absolute left-3",
+            nav_button_next: "absolute right-3",
+            table: "w-full border-collapse space-y-1",
+            head_row: "flex w-full justify-between px-2",
+            head_cell: "text-zinc-400 w-9 h-9 font-normal text-[0.8rem] flex items-center justify-center",
+            row: "flex w-full justify-between mt-1 px-2",
+            cell: "h-9 w-9 text-center text-sm relative p-0 focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-white/5 [&:has([aria-selected].day-outside)]:bg-white/5 [&:has([aria-selected].day-range-end)]:rounded-r-md",
+            day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 rounded-full flex items-center justify-center transition-colors hover:bg-white/20 aria-selected:bg-white aria-selected:text-black",
+            day_selected: "bg-white text-black hover:bg-white hover:text-black focus:bg-white focus:text-black",
+            day_outside: "opacity-30 aria-selected:bg-white/20 aria-selected:text-white aria-selected:opacity-30",
+            day_disabled: "opacity-30 hover:bg-transparent",
+            day_range_middle: "aria-selected:bg-white/10 aria-selected:text-white",
+            day_today: "border border-zinc-200 bg-none text-white",
+            day_hidden: "invisible",
+          }}
+          footer={
+            <div className="mt-3 mb-1 text-xs text-center text-gray-400 px-2">
+              Orders must be placed at least 2 days in advance
+            </div>
+          }
+        />
+      </div>
     </div>
   );
 };
 
+// Step 1: Company Information
+const CompanyInfoStep: React.FC<CompanyInfoStepProps> = ({ 
+  formData, 
+  errors, 
+  handleChange, 
+  handleBlur, 
+  goToNextStep 
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className="space-y-8"
+    >
+      <div className="space-y-2">
+        <label htmlFor="companyName" className="block text-sm font-medium text-zinc-400">
+          Business Name
+        </label>
+        <input
+          type="text"
+          id="companyName"
+          value={formData.companyName}
+          onChange={handleChange}
+          onBlur={() => handleBlur('companyName')}
+          placeholder="Enter your business name"
+          className={cn(
+            "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
+            errors.companyName ? "border-red-400/50" : ""
+          )}
+        />
+        {errors.companyName && (
+          <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+            {errors.companyName}
+          </div>
+        )}
+      </div>
+
+      <motion.div className="pt-4">
+        <motion.button
+          type="button"
+          onClick={goToNextStep}
+          className="w-full px-8 py-3 text-sm sm:text-base rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Continue
+        </motion.button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+// Step 2: Contact Information
+const ContactInfoStep: React.FC<ContactInfoStepProps> = ({ 
+  formData, 
+  errors, 
+  handleChange, 
+  handleBlur, 
+  goToNextStep,
+  goToPrevStep
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className="space-y-8"
+    >
+      <div className="space-y-2">
+        <label htmlFor="contactName" className="block text-sm font-medium text-zinc-400">
+          Contact Name
+        </label>
+        <input
+          type="text"
+          id="contactName"
+          value={formData.contactName}
+          onChange={handleChange}
+          onBlur={() => handleBlur('contactName')}
+          placeholder="Enter contact person's name"
+          className={cn(
+            "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
+            errors.contactName ? "border-red-400/50" : ""
+          )}
+        />
+        {errors.contactName && (
+          <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+            {errors.contactName}
+          </div>
+        )}
+      </div>
+      
+      <div className="space-y-2">
+        <label htmlFor="email" className="block text-sm font-medium text-zinc-400">
+          Email Address
+        </label>
+        <input
+          type="email"
+          id="email"
+          value={formData.email}
+          onChange={handleChange}
+          onBlur={() => handleBlur('email')}
+          placeholder="Enter your email"
+          className={cn(
+            "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
+            errors.email ? "border-red-400/50" : ""
+          )}
+        />
+        {errors.email && (
+          <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+            {errors.email}
+          </div>
+        )}
+      </div>
+      
+      <div className="space-y-2">
+        <label htmlFor="phone" className="block text-sm font-medium text-zinc-400">
+          Phone Number
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          onBlur={() => handleBlur('phone')}
+          placeholder="Enter your phone number"
+          className={cn(
+            "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
+            errors.phone ? "border-red-400/50" : ""
+          )}
+        />
+        {errors.phone && (
+          <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+            {errors.phone}
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-3 pt-4">
+        <motion.button
+          type="button"
+          onClick={goToPrevStep}
+          className="w-full sm:w-1/3 px-8 py-3 text-sm sm:text-base rounded-full border border-white/20 text-white font-medium hover:bg-white/5 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Back
+        </motion.button>
+        <motion.button
+          type="button"
+          onClick={goToNextStep}
+          className="w-full sm:w-2/3 px-8 py-3 text-sm sm:text-base rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Continue
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+};
+
+// Step 3: Order Details
+const OrderDetailsStep: React.FC<OrderDetailsStepProps> = ({ 
+  formData, 
+  errors, 
+  handleQuantityChange,
+  handleDateChange,
+  goToNextStep,
+  goToPrevStep
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className="space-y-8"
+    >
+      <div className="space-y-2 max-w-[120px]">
+        <label htmlFor="quantity" className="block text-sm font-medium text-zinc-400">
+          Number of Cases
+        </label>
+        <QuantityStepper 
+          value={formData.quantity} 
+          onChange={handleQuantityChange} 
+          min={1} 
+        />
+        {errors.quantity && (
+          <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+            {errors.quantity}
+          </div>
+        )}
+      </div>
+      
+      <div className="space-y-2">
+        <label htmlFor="deliveryDate" className="block text-sm font-medium text-zinc-400">
+          Delivery Date
+        </label>
+        <DatePickerField
+          value={formData.deliveryDate}
+          onChange={handleDateChange}
+        />
+        {errors.deliveryDate && (
+          <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+            {errors.deliveryDate}
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-3 pt-4">
+        <motion.button
+          type="button"
+          onClick={goToPrevStep}
+          className="w-full sm:w-1/3 px-8 py-3 text-sm sm:text-base rounded-full border border-white/20 text-white font-medium hover:bg-white/5 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Back
+        </motion.button>
+        <motion.button
+          type="button"
+          onClick={goToNextStep}
+          className="w-full sm:w-2/3 px-8 py-3 text-sm sm:text-base rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Continue
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+};
+
+// Step 4: Delivery Information
+const DeliveryInfoStep: React.FC<DeliveryInfoStepProps> = ({ 
+  formData, 
+  errors, 
+  handleChange, 
+  handleBlur, 
+  goToNextStep,
+  goToPrevStep
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className="space-y-8"
+    >
+      <div className="space-y-2">
+        <label htmlFor="address" className="block text-sm font-medium text-zinc-400">
+          Delivery Address
+        </label>
+        <textarea
+          id="address"
+          value={formData.address}
+          onChange={handleChange}
+          onBlur={() => handleBlur('address')}
+          placeholder="Enter your delivery address"
+          rows={3}
+          className={cn(
+            "w-full bg-transparent border-b-2 border-t-0 border-x-0 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none resize-none transition-all",
+            errors.address ? "border-red-400/50" : ""
+          )}
+        />
+        {errors.address && (
+          <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+            {errors.address}
+          </div>
+        )}
+      </div>
+      
+      <div className="space-y-2">
+        <label htmlFor="notes" className="block text-sm font-medium text-zinc-400">
+          Special Instructions <span className="text-zinc-500">(Optional)</span>
+        </label>
+        <textarea
+          id="notes"
+          value={formData.notes}
+          onChange={handleChange}
+          onBlur={() => handleBlur('notes')}
+          placeholder="Any special delivery instructions"
+          rows={3}
+          className={cn(
+            "w-full bg-transparent border-b-2 border-t-0 border-x-0 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none resize-none transition-all",
+            errors.notes ? "border-red-400/50" : ""
+          )}
+        />
+      </div>
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-3 pt-4">
+        <motion.button
+          type="button"
+          onClick={goToPrevStep}
+          className="w-full sm:w-1/3 px-8 py-3 text-sm sm:text-base rounded-full border border-white/20 text-white font-medium hover:bg-white/5 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Back
+        </motion.button>
+        <motion.button
+          type="button"
+          onClick={goToNextStep}
+          className="w-full sm:w-2/3 px-8 py-3 text-sm sm:text-base rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Review Order
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+};
+
+// Step 5: Review Order
+const ReviewStep: React.FC<ReviewStepProps> = ({ 
+  formData, 
+  isSubmitting,
+  submitStatus,
+  handleSubmit,
+  goToPrevStep
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className="space-y-8"
+    >
+      <div>
+        <h3 className="text-lg font-medium mb-4">Review Your Order</h3>
+        
+        <div className="space-y-4 bg-white/5 p-6 rounded-lg">
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-zinc-400 text-sm">Business Name:</div>
+            <div>{formData.companyName}</div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-zinc-400 text-sm">Contact Name:</div>
+            <div>{formData.contactName}</div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-zinc-400 text-sm">Email:</div>
+            <div>{formData.email}</div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-zinc-400 text-sm">Phone:</div>
+            <div>{formData.phone}</div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-zinc-400 text-sm">Quantity:</div>
+            <div>{formData.quantity} cases</div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-zinc-400 text-sm">Delivery Date:</div>
+            <div>{formData.deliveryDate ? format(new Date(formData.deliveryDate), 'MMMM d, yyyy') : 'Not selected'}</div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-zinc-400 text-sm">Delivery Address:</div>
+            <div style={{ wordBreak: 'break-word' }}>{formData.address}</div>
+          </div>
+          
+          {formData.notes && (
+            <div className="grid grid-cols-2 gap-2">
+              <div className="text-zinc-400 text-sm">Special Instructions:</div>
+              <div style={{ wordBreak: 'break-word' }}>{formData.notes}</div>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {submitStatus?.type === 'error' && (
+        <motion.div 
+          className="py-3 px-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-300 text-sm"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          {submitStatus.message}
+        </motion.div>
+      )}
+      
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-3 pt-4">
+        <motion.button
+          type="button"
+          onClick={goToPrevStep}
+          disabled={isSubmitting}
+          className="w-full sm:w-1/3 px-8 py-3 text-sm sm:text-base rounded-full border border-white/20 text-white font-medium hover:bg-white/5 transition-colors"
+          whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+          whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+        >
+          Back
+        </motion.button>
+        <motion.button
+          type="button"
+          onClick={(e) => handleSubmit(e as any)}
+          disabled={isSubmitting}
+          className="w-full sm:w-2/3 px-8 py-3 text-sm sm:text-base rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors relative"
+          whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+          whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+        >
+          {isSubmitting ? (
+            <>
+              <span className="opacity-0">Place Order</span>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+            </>
+          ) : (
+            "Place Order"
+          )}
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+};
+
 export default function OrderPage() {
-  // const router = useRouter();
+  const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -193,6 +651,50 @@ export default function OrderPage() {
     
     return () => clearTimeout(timer);
   }, []);
+
+  // Step navigation functions
+  const goToNextStep = () => {
+    // Validate current step fields before moving to the next step
+    let canProceed = true;
+    const newErrors: ValidationErrors = {};
+    const newTouched: { [key: string]: boolean } = { ...touched };
+    
+    // Determine which fields should be validated based on the current step
+    const fieldsToValidate: string[] = [];
+    if (currentStep === 1) {
+      fieldsToValidate.push('companyName');
+    } else if (currentStep === 2) {
+      fieldsToValidate.push('contactName', 'email', 'phone');
+    } else if (currentStep === 3) {
+      fieldsToValidate.push('quantity', 'deliveryDate');
+    } else if (currentStep === 4) {
+      fieldsToValidate.push('address');
+    }
+    
+    // Validate the fields for the current step
+    fieldsToValidate.forEach(fieldId => {
+      newTouched[fieldId] = true;
+      const error = validateField(fieldId, formData[fieldId]);
+      if (error) {
+        newErrors[fieldId] = error;
+        canProceed = false;
+      }
+    });
+    
+    setTouched(newTouched);
+    setErrors(prev => ({ ...prev, ...newErrors }));
+    
+    // Proceed to next step if validation passed
+    if (canProceed) {
+      setCurrentStep(prev => Math.min(prev + 1, 5));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const goToPrevStep = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Validate a field
   const validateField = (fieldId: string, value: string | number): string => {
@@ -403,6 +905,83 @@ export default function OrderPage() {
     );
   }
 
+  // Helper function to render the current step
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <CompanyInfoStep
+            formData={formData}
+            errors={errors}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            goToNextStep={goToNextStep}
+            goToPrevStep={goToPrevStep}
+          />
+        );
+      case 2:
+        return (
+          <ContactInfoStep
+            formData={formData}
+            errors={errors}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            goToNextStep={goToNextStep}
+            goToPrevStep={goToPrevStep}
+          />
+        );
+      case 3:
+        return (
+          <OrderDetailsStep
+            formData={formData}
+            errors={errors}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            handleQuantityChange={handleQuantityChange}
+            handleDateChange={handleDateChange}
+            goToNextStep={goToNextStep}
+            goToPrevStep={goToPrevStep}
+          />
+        );
+      case 4:
+        return (
+          <DeliveryInfoStep
+            formData={formData}
+            errors={errors}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            goToNextStep={goToNextStep}
+            goToPrevStep={goToPrevStep}
+          />
+        );
+      case 5:
+        return (
+          <ReviewStep
+            formData={formData}
+            errors={errors}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            isSubmitting={isSubmitting}
+            submitStatus={submitStatus}
+            handleSubmit={handleSubmit}
+            goToNextStep={goToNextStep}
+            goToPrevStep={goToPrevStep}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  // Progress indicator steps
+  const steps = [
+    { name: 'Business', step: 1 },
+    { name: 'Contact', step: 2 },
+    { name: 'Order', step: 3 },
+    { name: 'Delivery', step: 4 },
+    { name: 'Review', step: 5 }
+  ];
+
   return (
     <div className="h-full w-full overflow-y-auto mt-4 md:mt-32 px-6">
       <Link href="/" className="fixed top-4 left-3 z-[100] text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
@@ -415,222 +994,67 @@ export default function OrderPage() {
         </motion.div>
       </Link>
       <div className="max-w-xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-10 mt-20"
-      >
-        <h1 className="text-2xl sm:text-4xl font-bold text-center mb-1 tracking-tight">Place an Order</h1>
-        <p className="text-sm sm:text-base text-zinc-400 text-center">Fill out the form below to place your order</p>
-      </motion.div>
-      
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Business Name Field */}
-        <div className="space-y-2">
-          <label htmlFor="companyName" className="block text-sm font-medium text-zinc-400">
-            Business Name
-          </label>
-          <input
-            type="text"
-            id="companyName"
-            value={formData.companyName}
-            onChange={handleChange}
-            onBlur={() => handleBlur('companyName')}
-            placeholder="Enter your business name"
-            className={cn(
-              "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
-              errors.companyName ? "border-red-400/50" : ""
-            )}
-          />
-          {errors.companyName && (
-            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-              {errors.companyName}
-            </div>
-          )}
-        </div>
-        
-        {/* Contact Name Field */}
-        <div className="space-y-2">
-          <label htmlFor="contactName" className="block text-sm font-medium text-zinc-400">
-            Contact Name
-          </label>
-          <input
-            type="text"
-            id="contactName"
-            value={formData.contactName}
-            onChange={handleChange}
-            onBlur={() => handleBlur('contactName')}
-            placeholder="Enter contact person&apos;s name"
-            className={cn(
-              "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
-              errors.contactName ? "border-red-400/50" : ""
-            )}
-          />
-          {errors.contactName && (
-            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-              {errors.contactName}
-            </div>
-          )}
-        </div>
-        
-        {/* Email Field */}
-        <div className="space-y-2">
-          <label htmlFor="email" className="block text-sm font-medium text-zinc-400">
-            Email Address
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            onBlur={() => handleBlur('email')}
-            placeholder="Enter your email"
-            className={cn(
-              "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
-              errors.email ? "border-red-400/50" : ""
-            )}
-          />
-          {errors.email && (
-            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-              {errors.email}
-            </div>
-          )}
-        </div>
-        
-        {/* Phone Field */}
-        <div className="space-y-2">
-          <label htmlFor="phone" className="block text-sm font-medium text-zinc-400">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            onBlur={() => handleBlur('phone')}
-            placeholder="Enter your phone number"
-            className={cn(
-              "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
-              errors.phone ? "border-red-400/50" : ""
-            )}
-          />
-          {errors.phone && (
-            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-              {errors.phone}
-            </div>
-          )}
-        </div>
-        
-        {/* Quantity Field */}
-        <div className="space-y-2 max-w-[120px]">
-          <label htmlFor="quantity" className="block text-sm font-medium text-zinc-400">
-            Number of Cases
-          </label>
-          <QuantityStepper 
-            value={formData.quantity} 
-            onChange={handleQuantityChange} 
-            min={1} 
-          />
-          {errors.quantity && (
-            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-              {errors.quantity}
-            </div>
-          )}
-        </div>
-        
-        {/* Delivery Date Field */}
-        <div className="space-y-2">
-          <label htmlFor="deliveryDate" className="block text-sm font-medium text-zinc-400">
-            Delivery Date
-          </label>
-          <DatePickerField
-            value={formData.deliveryDate}
-            onChange={handleDateChange}
-          />
-          {errors.deliveryDate && (
-            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-              {errors.deliveryDate}
-            </div>
-          )}
-        </div>
-        
-        {/* Address Field */}
-        <div className="space-y-2">
-          <label htmlFor="address" className="block text-sm font-medium text-zinc-400">
-            Delivery Address
-          </label>
-          <textarea
-            id="address"
-            value={formData.address}
-            onChange={handleChange}
-            onBlur={() => handleBlur('address')}
-            placeholder="Enter your delivery address"
-            rows={3}
-            className={cn(
-              "w-full bg-transparent border-b-2 border-t-0 border-x-0 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none resize-none transition-all",
-              errors.address ? "border-red-400/50" : ""
-            )}
-          />
-          {errors.address && (
-            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-              {errors.address}
-            </div>
-          )}
-        </div>
-        
-        {/* Special Instructions Field */}
-        <div className="space-y-2">
-          <label htmlFor="notes" className="block text-sm font-medium text-zinc-400">
-            Special Instructions <span className="text-zinc-500">(Optional)</span>
-          </label>
-          <textarea
-            id="notes"
-            value={formData.notes}
-            onChange={handleChange}
-            onBlur={() => handleBlur('notes')}
-            placeholder="Any special delivery instructions"
-            rows={3}
-            className={cn(
-              "w-full bg-transparent border-b-2 border-t-0 border-x-0 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none resize-none transition-all",
-              errors.notes ? "border-red-400/50" : ""
-            )}
-          />
-        </div>
-        
-        {submitStatus?.type === 'error' && (
-          <motion.div 
-            className="py-3 px-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-300 text-sm"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            {submitStatus.message}
-          </motion.div>
-        )}
-        
-        <motion.div className="pt-4 pb-10">
-          <motion.button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full px-8 py-3 text-sm sm:text-base rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors relative"
-            whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-            whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-          >
-            {isSubmitting ? (
-              <>
-                <span className="opacity-0">Place Order</span>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-10 mt-20"
+        >
+          <h1 className="text-2xl sm:text-4xl font-bold text-center mb-1 tracking-tight">Place an Order</h1>
+          <p className="text-sm sm:text-base text-zinc-400 text-center">Fill out the form below to place your order</p>
+          
+          {/* Progress indicator */}
+          <div className="relative flex justify-between mt-8 mb-10 relative px-2 sm:px-4">
+            {/* Background line */}
+            <div className="absolute top-4 left-4 right-4 h-0.5 bg-white/10 z-0"></div>
+            
+            {/* Completed line */}
+            <div 
+              className="absolute top-4 left-4 h-0.5 bg-white/50 z-0 transition-all duration-300 ease-in-out"
+              style={{ 
+                width: `${(Math.max(0, currentStep - 1) / (steps.length - 1)) * (100 - 8)}%` 
+              }}
+            ></div>
+            
+            {steps.map((step) => (
+              <div key={step.step} className="flex flex-col items-center relative z-10">
+                <div 
+                  className={cn(
+                    "w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-medium mb-2 border-2 transition-all duration-200 text-sm sm:text-base",
+                    currentStep === step.step 
+                      ? "bg-white text-black border-white" 
+                      : currentStep > step.step 
+                        ? "bg-white text-black border-white" 
+                        : "bg-black text-zinc-400 border-white/20"
+                  )}
+                >
+                  {currentStep > step.step ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  ) : (
+                    <span>{step.step}</span>
+                  )}
                 </div>
-              </>
-            ) : (
-              "Place Order"
-            )}
-          </motion.button>
+                <span className={cn(
+                  "text-[10px] sm:text-xs whitespace-nowrap",
+                  currentStep === step.step 
+                    ? "text-white font-medium" 
+                    : currentStep > step.step
+                      ? "text-white/70"
+                      : "text-zinc-500"
+                )}>
+                  {step.name}
+                </span>
+              </div>
+            ))}
+          </div>
         </motion.div>
-      </form>
+        
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
+          <AnimatePresence mode="wait">
+            {renderStep()}
+          </AnimatePresence>
+        </form>
       </div>
     </div>
   );
