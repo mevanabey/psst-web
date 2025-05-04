@@ -13,7 +13,7 @@ export default function Home() {
               <Link href="/order" className="uppercase text-md sm:text-2xl relative group flex items-center justify-end -mr-2" scroll={true} prefetch={true}>
                 <motion.span 
                   className="relative -mt-0.5 mr-3  font-bold"
-                  initial={{ opacity: 1, x: -2 }}
+                  initial={{ opacity: 1, x: 0 }}
                   whileHover={{ opacity: 1, x: 0 }}
                   whileTap={{ scale: 0.95, x: 0 }}
                 >
@@ -22,14 +22,14 @@ export default function Home() {
                 <motion.span
                   className="text-gray-100 hover:text-white cursor-pointer font-medium tracking-wide relative"
                   initial={{ scale: 1 }}
-                  whileHover={{ scale: 0.9 }}
-                  whileTap={{ scale: 0.8 }}
+                  whileHover={{ scale: 0.95 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   Place an Order
                 </motion.span>
                 <motion.span 
                   className="relative -mt-0.5 ml-3 text-gray-100 font-bold"
-                  initial={{ opacity: 1, x: -2 }}
+                  initial={{ opacity: 1, x: 0 }}
                   whileHover={{ opacity: 1, x: 0 }}
                   whileTap={{ scale: 0.95, x: 0 }}
                 >
@@ -39,7 +39,7 @@ export default function Home() {
               <Link href="/contact" className="uppercase text-md sm:text-2xl relative group flex items-center justify-end -mr-2" scroll={true} prefetch={true}>
                 <motion.span 
                   className="relative -mt-0.5 mr-3 text-gray-100 font-bold"
-                  initial={{ opacity: 1, x: -2 }}
+                  initial={{ opacity: 1, x: 0 }}
                   whileHover={{ opacity: 1, x: 0 }}
                   whileTap={{ scale: 0.95, x: 0 }}
                 >
@@ -48,14 +48,14 @@ export default function Home() {
                 <motion.span
                   className="text-gray-100 hover:text-white cursor-pointer font-medium tracking-wide relative"
                   initial={{ scale: 1 }}
-                  whileHover={{ scale: 0.9 }}
-                  whileTap={{ scale: 0.8 }}
+                  whileHover={{ scale: 0.95 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   Contact Us
                 </motion.span>
                 <motion.span 
                   className="relative -mt-0.5 ml-3 text-gray-100 font-bold"
-                  initial={{ opacity: 1, x: -2 }}
+                  initial={{ opacity: 1, x: 0 }}
                   whileHover={{ opacity: 1, x: 0 }}
                   whileTap={{ scale: 0.95, x: 0 }}
                 >
