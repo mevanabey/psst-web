@@ -141,12 +141,14 @@ export default function ContactPage() {
         message: 'Your message has been sent successfully!'
       });
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting contact form:', error);
+      
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
       setSubmitStatus({
         type: 'error',
-        message: `Failed to send message: ${error.message || 'Unknown error'}`
+        message: `Failed to send message: ${errorMessage}`
       });
     } finally {
       setIsSubmitting(false);
@@ -170,7 +172,7 @@ export default function ContactPage() {
               </div>
               <h2 className="text-3xl sm:text-4xl font-light mb-4">Message Sent</h2>
               <p className="text-lg text-zinc-400 mb-6">
-                Thank you for your message. We'll be in touch soon.
+                Thank you for your message. We&apos;ll be in touch soon.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                 <Link href="/">
@@ -235,7 +237,7 @@ export default function ContactPage() {
             className="mb-10"
           >
             <h1 className="text-3xl sm:text-4xl font-light text-center mb-2">Get in Touch</h1>
-            <p className="text-zinc-400 text-center">Have questions? We'd love to hear from you.</p>
+            <p className="text-zinc-400 text-center">Have questions? We&apos;d love to hear from you.</p>
           </motion.div>
           
           <form onSubmit={handleSubmit} className="space-y-8">

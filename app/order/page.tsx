@@ -334,12 +334,14 @@ export default function OrderPage() {
         message: 'Your order has been submitted successfully!'
       });
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting order:', error);
+      
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
       setSubmitStatus({
         type: 'error',
-        message: `Failed to submit order: ${error.message || 'Unknown error'}`
+        message: `Failed to submit order: ${errorMessage}`
       });
     } finally {
       setIsSubmitting(false);
@@ -350,6 +352,16 @@ export default function OrderPage() {
   if (submitStatus?.type === 'success') {
     return (
       <div className="mt-24 md:mt-32 px-6 max-w-xl mx-auto">
+        <Link href="/" className="fixed top-6 left-6 z-50 text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
+          <motion.div
+            className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-3 py-2 rounded-full"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            <span>Back</span>
+          </motion.div>
+        </Link>
         <motion.div 
           className="w-full text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -362,7 +374,7 @@ export default function OrderPage() {
             </div>
             <h2 className="text-3xl sm:text-4xl font-light mb-4">Order Submitted</h2>
             <p className="text-lg text-zinc-400 mb-6">
-              Thank you for your order. We'll be in touch soon to confirm the details.
+              Thank you for your order. We&apos;ll be in touch soon to confirm the details.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <Link href="/">
@@ -410,6 +422,16 @@ export default function OrderPage() {
 
   return (
     <div className="h-full w-full overflow-y-auto mt-4 md:mt-32 px-6 max-w-xl mx-auto">
+      <Link href="/" className="fixed top-6 left-6 z-50 text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
+        <motion.div
+          className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-3 py-2 rounded-full"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          <span>Back</span>
+        </motion.div>
+      </Link>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -455,7 +477,7 @@ export default function OrderPage() {
             value={formData.contactName}
             onChange={handleChange}
             onBlur={() => handleBlur('contactName')}
-            placeholder="Enter contact person's name"
+            placeholder="Enter contact person&apos;s name"
             className={cn(
               "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
               errors.contactName ? "border-red-400/50" : ""
