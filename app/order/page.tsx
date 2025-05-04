@@ -652,6 +652,15 @@ export default function OrderPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Handle smooth scrolling when changing steps
+  useEffect(() => {
+    // Smoothly scroll to top when step changes
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth' 
+    });
+  }, [currentStep]);
+
   // Step navigation functions
   const goToNextStep = () => {
     // Validate current step fields before moving to the next step
@@ -687,13 +696,21 @@ export default function OrderPage() {
     // Proceed to next step if validation passed
     if (canProceed) {
       setCurrentStep(prev => Math.min(prev + 1, 5));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Scroll to top with smooth behavior
+      window.scrollTo({ 
+        top: 0, 
+        behavior: 'smooth' 
+      });
     }
   };
 
   const goToPrevStep = () => {
     setCurrentStep(prev => Math.max(prev - 1, 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to top with smooth behavior
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth' 
+    });
   };
 
   // Validate a field
@@ -864,7 +881,7 @@ export default function OrderPage() {
   // If we have a successful submission, show a success screen
   if (submitStatus?.type === 'success') {
     return (
-      <div className="relative h-full w-full flex flex-col justify-center items-center z-[100] px-6 max-w-xl mx-auto">
+      <div className="flex flex-col justify-center items-center min-h-screen pt-20 pb-10 px-6 max-w-xl mx-auto">
         <Link href="/" className="fixed top-4 left-3 z-[100] text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
           <motion.div
             className="flex items-center gap-2 px-3 py-2 rounded-full"
@@ -983,7 +1000,7 @@ export default function OrderPage() {
   ];
 
   return (
-    <div className="h-full w-full overflow-y-auto mt-4 md:mt-32 px-6">
+    <div className="flex flex-col h-screen pt-20 pb-10 overflow-auto">
       <Link href="/" className="fixed top-4 left-3 z-[100] text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
         <motion.div
           className="flex items-center gap-2 px-3 py-2 rounded-full"
@@ -993,23 +1010,23 @@ export default function OrderPage() {
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
         </motion.div>
       </Link>
-      <div className="max-w-xl mx-auto">
+      <div className="max-w-xl w-full mx-auto px-6 flex-1 sm:mt-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-10 mt-20"
+          className="mb-10"
         >
-          <h1 className="text-2xl sm:text-4xl font-bold text-center mb-1 tracking-tight">Place an Order</h1>
-          <p className="text-sm sm:text-base text-zinc-400 text-center">Fill out the form below to place your order</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-1 tracking-tight">Place an Order</h1>
+          <p className="text-xs sm:text-base text-zinc-400 text-center">Fill out the form below to place your order</p>
           
           {/* Progress indicator */}
-          <div className="relative flex justify-between mt-8 mb-10 relative px-2 sm:px-4">
+          <div className="relative flex justify-between mt-8 mb-10 px-2 sm:px-4">
             {/* Background line */}
-            <div className="absolute top-4 left-4 right-4 h-0.5 bg-white/10 z-0"></div>
+            <div className="absolute top-5 left-6 right-4 h-0.5 bg-white/10 z-0"></div>
             
             {/* Completed line */}
             <div 
-              className="absolute top-4 left-4 h-0.5 bg-white/50 z-0 transition-all duration-300 ease-in-out"
+              className="absolute top-5 left-6 h-0.5 bg-white/50 z-0 transition-all duration-300 ease-in-out"
               style={{ 
                 width: `${(Math.max(0, currentStep - 1) / (steps.length - 1)) * (100 - 8)}%` 
               }}
@@ -1019,7 +1036,7 @@ export default function OrderPage() {
               <div key={step.step} className="flex flex-col items-center relative z-10">
                 <div 
                   className={cn(
-                    "w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-medium mb-2 border-2 transition-all duration-200 text-sm sm:text-base",
+                    "w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-medium mb-0 border-2 transition-all duration-200 text-sm sm:text-base",
                     currentStep === step.step 
                       ? "bg-white text-black border-white" 
                       : currentStep > step.step 
@@ -1036,7 +1053,7 @@ export default function OrderPage() {
                   )}
                 </div>
                 <span className={cn(
-                  "text-[10px] sm:text-xs whitespace-nowrap",
+                  "mt-0.5 text-[10px] sm:text-xs whitespace-nowrap",
                   currentStep === step.step 
                     ? "text-white font-medium" 
                     : currentStep > step.step
@@ -1050,7 +1067,7 @@ export default function OrderPage() {
           </div>
         </motion.div>
         
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-8 mb-10">
           <AnimatePresence mode="wait">
             {renderStep()}
           </AnimatePresence>
