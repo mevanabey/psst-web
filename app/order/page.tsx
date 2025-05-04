@@ -1023,11 +1023,11 @@ export default function OrderPage() {
           {/* Progress indicator */}
           <div className="relative flex justify-between mt-8 mb-10 px-2 sm:px-4">
             {/* Background line */}
-            <div className="absolute top-5 left-6 right-4 h-0.5 bg-white/10 z-0"></div>
+            <div className="absolute top-4 sm:top-5 left-6 right-4 h-0.5 bg-white/10 z-0"></div>
             
             {/* Completed line */}
             <div 
-              className="absolute top-5 left-6 h-0.5 bg-white/50 z-0 transition-all duration-300 ease-in-out"
+              className="absolute top-4 sm:top-5 left-6 h-0.5 bg-white/50 z-0 transition-all duration-300 ease-in-out"
               style={{ 
                 width: `${(Math.max(0, currentStep - 1) / (steps.length - 1)) * (100 - 8)}%` 
               }}
