@@ -6,7 +6,7 @@ import { motion } from "motion/react"
 
 export default function Home() {
   return (
-      <div className="">
+      <div className="h-screen w-screen overflow-hidden">
         <main className="relative z-[20] flex flex-col items-center">
           <div className="fixed bottom-8 right-8 sm:bottom-16 sm:right-16 flex flex-col text-right gap-4 text-gray-300">
           <div className="flex flex-col gap-4 mb-2">
