@@ -349,303 +349,287 @@ export default function OrderPage() {
   // If we have a successful submission, show a success screen
   if (submitStatus?.type === 'success') {
     return (
-      <div className="min-h-screen w-full flex flex-col bg-black text-white">
-        <main className="flex-1 flex items-center justify-center">
-          <motion.div 
-            className="w-full max-w-xl px-8 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-light mb-4">Order Submitted</h2>
-              <p className="text-lg text-zinc-400 mb-6">
-                Thank you for your order. We'll be in touch soon to confirm the details.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                <Link href="/">
-                  <motion.button
-                    className="px-8 py-3 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    Back to Home
-                  </motion.button>
-                </Link>
+      <div className="mt-24 md:mt-32 px-6 max-w-xl mx-auto">
+        <motion.div 
+          className="w-full text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="mb-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-light mb-4">Order Submitted</h2>
+            <p className="text-lg text-zinc-400 mb-6">
+              Thank you for your order. We'll be in touch soon to confirm the details.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+              <Link href="/">
                 <motion.button
-                  onClick={() => {
-                    // Reset form
-                    setFormData({
-                      companyName: "",
-                      contactName: "",
-                      email: "",
-                      phone: "",
-                      quantity: 1,
-                      deliveryDate: "",
-                      notes: "",
-                      address: "",
-                    });
-                    setSubmitStatus(null);
-                    setTouched({});
-                    setErrors({});
-                  }}
-                  className="px-8 py-3 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors"
+                  className="px-8 py-3 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  Place Another Order
+                  Back to Home
                 </motion.button>
-              </div>
+              </Link>
+              <motion.button
+                onClick={() => {
+                  // Reset form
+                  setFormData({
+                    companyName: "",
+                    contactName: "",
+                    email: "",
+                    phone: "",
+                    quantity: 1,
+                    deliveryDate: "",
+                    notes: "",
+                    address: "",
+                  });
+                  setSubmitStatus(null);
+                  setTouched({});
+                  setErrors({});
+                }}
+                className="px-8 py-3 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Place Another Order
+              </motion.button>
             </div>
-          </motion.div>
-        </main>
-        <footer className="py-6 text-center text-sm text-zinc-600">
-          <div className="max-w-xl mx-auto px-8">
-            <div className="pb-6 border-t border-zinc-900"></div>
-            <p>&copy; {new Date().getFullYear()} PSST Vodka</p>
           </div>
+        </motion.div>
+        <footer className="py-6 text-center text-sm text-zinc-600 mt-20">
+          <div className="pb-6 border-t border-zinc-900"></div>
+          <p>&copy; {new Date().getFullYear()} PSST Vodka</p>
         </footer>
       </div>
     );
   }
 
   return (
-    <div className="h-screen w-screen z-[20] text-white overflow-y-auto">
-      <div className="fixed top-0 left-0 w-full z-20 bg-gradient-to-b from-black via-black/95 to-black/0">
-          <div className="flex justify-between items-center px-4 py-6">
-            <Link href="/" className="text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-              {/* <span>Back</span> */}
-            </Link>
-        </div>
-      </div>
+    <div className="h-full w-full overflow-y-auto mt-4 md:mt-32 px-6 max-w-xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-10"
+      >
+        <h1 className="text-2xl sm:text-4xl font-bold text-center mb-1">Place an Order</h1>
+        <p className="text-sm sm:text-base text-zinc-400 text-center">Fill out the form below to place your order</p>
+      </motion.div>
       
-      <div className="relative z-10 top-0 mx-auto px-6 pb-20 pt-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-10"
-        >
-          <h1 className="text-2xl sm:text-4xl font-bold text-center mb-1">Place an Order</h1>
-          <p className="text-sm sm:text-base text-zinc-400 text-center">Fill out the form below to place your order</p>
-        </motion.div>
-        
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Business Name Field */}
-          <div className="space-y-2">
-            <label htmlFor="companyName" className="block text-sm font-medium text-zinc-400">
-              Business Name
-            </label>
-            <input
-              type="text"
-              id="companyName"
-              value={formData.companyName}
-              onChange={handleChange}
-              onBlur={() => handleBlur('companyName')}
-              placeholder="Enter your business name"
-              className={cn(
-                "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
-                errors.companyName ? "border-red-400/50" : ""
-              )}
-            />
-            {errors.companyName && (
-              <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-                {errors.companyName}
-              </div>
+      <form onSubmit={handleSubmit} className="space-y-8">
+        {/* Business Name Field */}
+        <div className="space-y-2">
+          <label htmlFor="companyName" className="block text-sm font-medium text-zinc-400">
+            Business Name
+          </label>
+          <input
+            type="text"
+            id="companyName"
+            value={formData.companyName}
+            onChange={handleChange}
+            onBlur={() => handleBlur('companyName')}
+            placeholder="Enter your business name"
+            className={cn(
+              "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
+              errors.companyName ? "border-red-400/50" : ""
             )}
-          </div>
-          
-          {/* Contact Name Field */}
-          <div className="space-y-2">
-            <label htmlFor="contactName" className="block text-sm font-medium text-zinc-400">
-              Contact Name
-            </label>
-            <input
-              type="text"
-              id="contactName"
-              value={formData.contactName}
-              onChange={handleChange}
-              onBlur={() => handleBlur('contactName')}
-              placeholder="Enter contact person's name"
-              className={cn(
-                "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
-                errors.contactName ? "border-red-400/50" : ""
-              )}
-            />
-            {errors.contactName && (
-              <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-                {errors.contactName}
-              </div>
-            )}
-          </div>
-          
-          {/* Email Field */}
-          <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-zinc-400">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              onBlur={() => handleBlur('email')}
-              placeholder="Enter your email"
-              className={cn(
-                "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
-                errors.email ? "border-red-400/50" : ""
-              )}
-            />
-            {errors.email && (
-              <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-                {errors.email}
-              </div>
-            )}
-          </div>
-          
-          {/* Phone Field */}
-          <div className="space-y-2">
-            <label htmlFor="phone" className="block text-sm font-medium text-zinc-400">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              onBlur={() => handleBlur('phone')}
-              placeholder="Enter your phone number"
-              className={cn(
-                "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
-                errors.phone ? "border-red-400/50" : ""
-              )}
-            />
-            {errors.phone && (
-              <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-                {errors.phone}
-              </div>
-            )}
-          </div>
-          
-          {/* Quantity Field */}
-          <div className="space-y-2 max-w-[120px]">
-            <label htmlFor="quantity" className="block text-sm font-medium text-zinc-400">
-              Number of Cases
-            </label>
-            <QuantityStepper 
-              value={formData.quantity} 
-              onChange={handleQuantityChange} 
-              min={1} 
-            />
-            {errors.quantity && (
-              <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-                {errors.quantity}
-              </div>
-            )}
-          </div>
-          
-          {/* Delivery Date Field */}
-          <div className="space-y-2">
-            <label htmlFor="deliveryDate" className="block text-sm font-medium text-zinc-400">
-              Delivery Date
-            </label>
-            <DatePickerField
-              value={formData.deliveryDate}
-              onChange={handleDateChange}
-            />
-            {errors.deliveryDate && (
-              <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-                {errors.deliveryDate}
-              </div>
-            )}
-          </div>
-          
-          {/* Address Field */}
-          <div className="space-y-2">
-            <label htmlFor="address" className="block text-sm font-medium text-zinc-400">
-              Delivery Address
-            </label>
-            <textarea
-              id="address"
-              value={formData.address}
-              onChange={handleChange}
-              onBlur={() => handleBlur('address')}
-              placeholder="Enter your delivery address"
-              rows={3}
-              className={cn(
-                "w-full bg-transparent border-b-2 border-t-0 border-x-0 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none resize-none transition-all",
-                errors.address ? "border-red-400/50" : ""
-              )}
-            />
-            {errors.address && (
-              <div className="mt-1 text-red-400 text-sm animate-fadeIn">
-                {errors.address}
-              </div>
-            )}
-          </div>
-          
-          {/* Special Instructions Field */}
-          <div className="space-y-2">
-            <label htmlFor="notes" className="block text-sm font-medium text-zinc-400">
-              Special Instructions <span className="text-zinc-500">(Optional)</span>
-            </label>
-            <textarea
-              id="notes"
-              value={formData.notes}
-              onChange={handleChange}
-              onBlur={() => handleBlur('notes')}
-              placeholder="Any special delivery instructions"
-              rows={3}
-              className={cn(
-                "w-full bg-transparent border-b-2 border-t-0 border-x-0 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none resize-none transition-all",
-                errors.notes ? "border-red-400/50" : ""
-              )}
-            />
-          </div>
-          
-          {submitStatus?.type === 'error' && (
-            <motion.div 
-              className="py-3 px-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-300 text-sm"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              {submitStatus.message}
-            </motion.div>
+          />
+          {errors.companyName && (
+            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+              {errors.companyName}
+            </div>
           )}
-          
-          <motion.div className="pt-4 pb-10">
-            <motion.button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full px-8 py-3 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors relative"
-              whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-              whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="opacity-0">Place Order</span>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  </div>
-                </>
-              ) : (
-                "Place Order"
-              )}
-            </motion.button>
-          </motion.div>
-        </form>
-      </div>
-      
-      <footer className="py-6 text-center text-sm text-zinc-600 border-t border-zinc-900">
-        <div className="max-w-xl mx-auto px-8">
-          <p>&copy; {new Date().getFullYear()} PSST Vodka</p>
         </div>
+        
+        {/* Contact Name Field */}
+        <div className="space-y-2">
+          <label htmlFor="contactName" className="block text-sm font-medium text-zinc-400">
+            Contact Name
+          </label>
+          <input
+            type="text"
+            id="contactName"
+            value={formData.contactName}
+            onChange={handleChange}
+            onBlur={() => handleBlur('contactName')}
+            placeholder="Enter contact person's name"
+            className={cn(
+              "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
+              errors.contactName ? "border-red-400/50" : ""
+            )}
+          />
+          {errors.contactName && (
+            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+              {errors.contactName}
+            </div>
+          )}
+        </div>
+        
+        {/* Email Field */}
+        <div className="space-y-2">
+          <label htmlFor="email" className="block text-sm font-medium text-zinc-400">
+            Email Address
+          </label>
+          <input
+            type="email"
+            id="email"
+            value={formData.email}
+            onChange={handleChange}
+            onBlur={() => handleBlur('email')}
+            placeholder="Enter your email"
+            className={cn(
+              "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
+              errors.email ? "border-red-400/50" : ""
+            )}
+          />
+          {errors.email && (
+            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+              {errors.email}
+            </div>
+          )}
+        </div>
+        
+        {/* Phone Field */}
+        <div className="space-y-2">
+          <label htmlFor="phone" className="block text-sm font-medium text-zinc-400">
+            Phone Number
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            onBlur={() => handleBlur('phone')}
+            placeholder="Enter your phone number"
+            className={cn(
+              "w-full bg-transparent border-b-2 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none transition-all",
+              errors.phone ? "border-red-400/50" : ""
+            )}
+          />
+          {errors.phone && (
+            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+              {errors.phone}
+            </div>
+          )}
+        </div>
+        
+        {/* Quantity Field */}
+        <div className="space-y-2 max-w-[120px]">
+          <label htmlFor="quantity" className="block text-sm font-medium text-zinc-400">
+            Number of Cases
+          </label>
+          <QuantityStepper 
+            value={formData.quantity} 
+            onChange={handleQuantityChange} 
+            min={1} 
+          />
+          {errors.quantity && (
+            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+              {errors.quantity}
+            </div>
+          )}
+        </div>
+        
+        {/* Delivery Date Field */}
+        <div className="space-y-2">
+          <label htmlFor="deliveryDate" className="block text-sm font-medium text-zinc-400">
+            Delivery Date
+          </label>
+          <DatePickerField
+            value={formData.deliveryDate}
+            onChange={handleDateChange}
+          />
+          {errors.deliveryDate && (
+            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+              {errors.deliveryDate}
+            </div>
+          )}
+        </div>
+        
+        {/* Address Field */}
+        <div className="space-y-2">
+          <label htmlFor="address" className="block text-sm font-medium text-zinc-400">
+            Delivery Address
+          </label>
+          <textarea
+            id="address"
+            value={formData.address}
+            onChange={handleChange}
+            onBlur={() => handleBlur('address')}
+            placeholder="Enter your delivery address"
+            rows={3}
+            className={cn(
+              "w-full bg-transparent border-b-2 border-t-0 border-x-0 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none resize-none transition-all",
+              errors.address ? "border-red-400/50" : ""
+            )}
+          />
+          {errors.address && (
+            <div className="mt-1 text-red-400 text-sm animate-fadeIn">
+              {errors.address}
+            </div>
+          )}
+        </div>
+        
+        {/* Special Instructions Field */}
+        <div className="space-y-2">
+          <label htmlFor="notes" className="block text-sm font-medium text-zinc-400">
+            Special Instructions <span className="text-zinc-500">(Optional)</span>
+          </label>
+          <textarea
+            id="notes"
+            value={formData.notes}
+            onChange={handleChange}
+            onBlur={() => handleBlur('notes')}
+            placeholder="Any special delivery instructions"
+            rows={3}
+            className={cn(
+              "w-full bg-transparent border-b-2 border-t-0 border-x-0 border-white/20 focus:border-white px-0 py-2 text-base focus:outline-none resize-none transition-all",
+              errors.notes ? "border-red-400/50" : ""
+            )}
+          />
+        </div>
+        
+        {submitStatus?.type === 'error' && (
+          <motion.div 
+            className="py-3 px-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-300 text-sm"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            {submitStatus.message}
+          </motion.div>
+        )}
+        
+        <motion.div className="pt-4 pb-10">
+          <motion.button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full px-8 py-3 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors relative"
+            whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+            whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+          >
+            {isSubmitting ? (
+              <>
+                <span className="opacity-0">Place Order</span>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              </>
+            ) : (
+              "Place Order"
+            )}
+          </motion.button>
+        </motion.div>
+      </form>
+      
+      <footer className="py-6 text-center text-sm text-zinc-600 mt-20">
+        <div className="pb-6 border-t border-zinc-900"></div>
+        <p>&copy; {new Date().getFullYear()} PSST Vodka</p>
       </footer>
     </div>
   );
