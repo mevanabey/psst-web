@@ -191,7 +191,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({ value, onChange }) =>
             day_hidden: "invisible",
           }}
           footer={
-            <div className="mt-3 mb-1 text-xs text-center text-gray-400 px-2">
+            <div className="mt-3 mb-5 text-xs text-center text-gray-400 px-2">
               Orders must be placed at least 2 days in advance
             </div>
           }
