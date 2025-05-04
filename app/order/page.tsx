@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 // Add validation types
 interface ValidationErrors {
