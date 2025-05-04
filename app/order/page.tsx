@@ -35,13 +35,14 @@ interface BaseStepProps {
   goToPrevStep: () => void;
 }
 
-interface CompanyInfoStepProps extends BaseStepProps {}
-interface ContactInfoStepProps extends BaseStepProps {}
+// Use type instead of empty interfaces that extend BaseStepProps
+type CompanyInfoStepProps = BaseStepProps;
+type ContactInfoStepProps = BaseStepProps;
 interface OrderDetailsStepProps extends BaseStepProps {
   handleQuantityChange: (value: number | string) => void;
   handleDateChange: (value: string) => void;
 }
-interface DeliveryInfoStepProps extends BaseStepProps {}
+type DeliveryInfoStepProps = BaseStepProps;
 interface ReviewStepProps extends BaseStepProps {
   isSubmitting: boolean;
   submitStatus: { type: 'success' | 'error', message: string } | null;
@@ -600,7 +601,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
         </motion.button>
         <motion.button
           type="button"
-          onClick={(e) => handleSubmit(e as any)}
+          onClick={(e) => handleSubmit(e as React.FormEvent)}
           disabled={isSubmitting}
           className="w-full sm:w-2/3 px-8 py-3 text-sm sm:text-base rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors relative"
           whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
