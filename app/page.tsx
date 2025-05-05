@@ -24,7 +24,7 @@ export default function Home() {
                     whileHover={{ scale: 0.95 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    Place an Order
+                    Become a stockist
                   </motion.span>
                   <motion.span 
                     className="relative -mt-0.5 ml-2 text-gray-100 font-bold"

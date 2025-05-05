@@ -1017,7 +1017,7 @@ export default function OrderPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-10"
         >
-          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-1 tracking-tight">Place an Order</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-1 tracking-tight">Become a stockist</h1>
           <p className="text-xs sm:text-base text-zinc-400 text-center">Fill out the form below to place your order</p>
           
           {/* Progress indicator */}
