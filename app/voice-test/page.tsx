@@ -10,7 +10,8 @@ import Link from "next/link";
 interface ConversationMessage {
   message: string;
   source: string;
-  [key: string]: any;
+  // Replace any with Record<string, unknown> to avoid ESLint errors
+  [key: string]: string | number | boolean | object | null | undefined;
 }
 
 export default function VoiceTest() {
