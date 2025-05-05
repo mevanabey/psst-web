@@ -118,7 +118,7 @@ export default function VoiceTest() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-lg font-medium">Voice Assistant</h3>
-                    <p className="text-sm text-zinc-400">Using agent: Mason</p>
+                    <p className="text-sm text-zinc-400">Using agent: Jesse</p>
                   </div>
                   <div className={cn(
                     "px-3 py-1 rounded-full text-xs font-medium",
