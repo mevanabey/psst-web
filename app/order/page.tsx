@@ -889,9 +889,9 @@ export default function OrderPage() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-        </motion.div>
-      </Link>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </motion.div>
+        </Link>
         <motion.div 
           className="w-full text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -1001,7 +1001,7 @@ export default function OrderPage() {
   ];
 
   return (
-    <div className="flex flex-col h-screen pt-20 pb-10 overflow-auto">
+    <div className="flex flex-col mt-20">
       <Link href="/" className="fixed top-4 left-3 z-[100] text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
         <motion.div
           className="flex items-center gap-2 px-3 py-2 rounded-full"

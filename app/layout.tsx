@@ -1,17 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
-import { Logo } from "@/components/logos";
-import Link from "next/link";
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import { HeaderWithBackground } from "@/components/header";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  weight: ["300", "400", "500", "600", "700"],
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
+
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   weight: ["300", "400", "500", "600", "700"],
+//   subsets: ["latin"],
+// });
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -34,16 +40,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen`}
+        className={`${dmSans.variable} antialiased h-full w-full`}
       >
-        <div className="relative h-screen w-screen overflow-hidden">
-          <header className="fixed top-0 w-full h-fit z-[100] flex justify-center items-center p-6 bg-black/25 backdrop-blur-sm">
-            <Link href="/">
-              <Logo className="w-24 sm:w-28 text-white" />
-            </Link>
-          </header>
-          {children}
-        </div>
+        <HeaderWithBackground />
+        {children}
       </body>
     </html>
   );

@@ -215,7 +215,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen pt-20 pb-10 overflow-auto">
+    <div className="flex flex-col mt-20">
       <Link href="/" className="fixed top-4 left-3 z-[100] text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
         <motion.div
           className="flex items-center gap-2 px-3 py-2 rounded-full"
