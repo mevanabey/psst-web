@@ -102,8 +102,7 @@ export default function VoiceTest() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-10"
         >
-          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-1 tracking-tight">Voice Assistant</h1>
-          <p className="text-xs sm:text-base text-zinc-400 text-center">Interact with our AI voice assistant</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-1 tracking-tight">Voice Agent Test</h1>
         </motion.div>
         
         <div className="space-y-8 mb-10">
