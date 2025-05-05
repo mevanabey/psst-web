@@ -216,10 +216,6 @@ export default function VoiceTest() {
                   )}
                 </div>
               </div>
-              
-              <div className="text-xs text-zinc-500 text-center">
-                <p>This demo uses the ElevenLabs Conversational AI API</p>
-              </div>
             </motion.div>
           </AnimatePresence>
         </div>
