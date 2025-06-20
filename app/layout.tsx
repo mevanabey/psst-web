@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
-import { HeaderWithBackground } from "@/components/header";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -42,7 +41,6 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} antialiased h-full w-full`}
       >
-        <HeaderWithBackground />
         {children}
       </body>
     </html>
